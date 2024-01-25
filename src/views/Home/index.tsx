@@ -26,7 +26,9 @@ const Home = () => {
 
 	const filteredBeerList = beerList.filter(beer => beer.name.toLowerCase().includes(filterValue.toLowerCase()));
 	const sortedBeerList = sort === "ASC" ? filteredBeerList.sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0) : filteredBeerList.sort((a, b) => a.name > b.name ? -1 : a.name > b.name ? 1 : 0);
-	const pagedBeerList = sortedBeerList.slice((page-1) * ITEMS_PER_PAGE, (page-1) * ITEMS_PER_PAGE + ITEMS_PER_PAGE)	
+	const countPage = Math.ceil(sortedBeerList.length / ITEMS_PER_PAGE);
+	const currentPage = page > countPage ? countPage : page;
+	const pagedBeerList = sortedBeerList.slice((currentPage-1) * ITEMS_PER_PAGE, (currentPage-1) * ITEMS_PER_PAGE + ITEMS_PER_PAGE)	
 
 	const onCheckBeer = (checked: boolean, id: string) => {
 		const newBeerState = beerList.map(beer => (beer.id === id ? {...beer, checked: checked} : beer));
@@ -50,7 +52,7 @@ const Home = () => {
 						<div className={styles.listContainer}>
 							<div className={styles.listHeader}>
 								<div style={{display: "flex"}}>
-									<TextField label='Filter...' variant='outlined' onChange={(e: ChangeEvent<HTMLInputElement>) => setFilterValue(e.target.value) } />
+									<TextField autoComplete="one-time-code" label='Filter...' variant='outlined' onChange={(e: ChangeEvent<HTMLInputElement>) => setFilterValue(e.target.value) } />
 									<Button variant='contained' onClick={() => setSort(prev => prev === "ASC" ? "DESC" : "ASC")}>
 										Sort {sort === "ASC" ? "↓" : "↑"}
 									</Button>
@@ -68,7 +70,7 @@ const Home = () => {
 									</li>
 								))}
 							</ul>
-							<Pagination count={Math.ceil(sortedBeerList.length / ITEMS_PER_PAGE)} sx={{mb: 5}} page={page} onChange={(_, page) => setPage(page)} />
+							<Pagination count={countPage} sx={{mb: 5}} page={currentPage} onChange={(_, page) => setPage(page)} />
 							<Button variant='contained' onClick={onClickSaveSelectedItems} disabled={!sortedBeerList.some(beer => beer.checked)}>Save selected items</Button>
 						</div>
 					</Paper>
