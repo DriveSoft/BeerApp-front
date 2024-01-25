@@ -10,11 +10,13 @@ const Home = () => {
 	const [beerList, setBeerList] = useState<Array<Beer>>([]);
 	const [savedList, setSavedList] = useState<Array<Beer>>([]);
 	const [filterValue, setFilterValue] = useState('');
+	const [sort, setSort] = useState<"ASC" | "DESC">('ASC');
 
 	// eslint-disable-next-line
 	useEffect(fetchData.bind(this, setBeerList), []);
 
 	const filteredBeerList = beerList.filter(beer => beer.name.toLowerCase().includes(filterValue.toLowerCase()));
+	const sortedBeerList = sort === "ASC" ? filteredBeerList.sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0) : filteredBeerList.sort((a, b) => a.name > b.name ? -1 : a.name > b.name ? 1 : 0);
 		
 	const onCheckBeer = (checked: boolean, id: string) => {
 		const newBeerState = beerList.map(beer => (beer.id === id ? {...beer, checked: checked} : beer));
@@ -37,11 +39,17 @@ const Home = () => {
 					<Paper>
 						<div className={styles.listContainer}>
 							<div className={styles.listHeader}>
-								<TextField label='Filter...' variant='outlined' onChange={(e: ChangeEvent<HTMLInputElement>) => setFilterValue(e.target.value) } />
+								<div style={{display: "flex"}}>
+									<TextField label='Filter...' variant='outlined' onChange={(e: ChangeEvent<HTMLInputElement>) => setFilterValue(e.target.value) } />
+									<Button variant='contained' onClick={() => setSort(prev => prev === "ASC" ? "DESC" : "ASC")}>
+										Sort {sort === "ASC" ? "↓" : "↑"}
+									</Button>
+								</div>
+								
 								<Button variant='contained' onClick={() => fetchData.bind(this, setBeerList)()}>Reload list</Button>
 							</div>
 							<ul className={styles.list}>
-								{filteredBeerList.map((beer, index) => (
+								{sortedBeerList.map((beer, index) => (
 									<li key={index.toString()}>
 										<Checkbox checked={beer.checked} onChange={(_, checked) => onCheckBeer(checked, beer.id)} />
 										<Link component={RouterLink} to={`/beer/${beer.id}`}>
@@ -50,7 +58,7 @@ const Home = () => {
 									</li>
 								))}
 							</ul>
-							<Button variant='contained' onClick={onClickSaveSelectedItems} disabled={!filteredBeerList.some(beer => beer.checked)}>Save selected items</Button>
+							<Button variant='contained' onClick={onClickSaveSelectedItems} disabled={!sortedBeerList.some(beer => beer.checked)}>Save selected items</Button>
 						</div>
 					</Paper>
 
