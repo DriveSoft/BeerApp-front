@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { API } from './config';
-import { ApiParams } from '../types';
+import { ApiParams, Beer } from '../types';
 
 const getBeer = (id: string) => axios.get(`${API}breweries/${id}`);
 
@@ -11,7 +11,7 @@ const getBeerList = (params?: ApiParams) => axios.get(`${API}breweries/`, { para
  * @returns New promise with api call for random beer list.
  */
 const getRandomBeerList = (size = 3) =>
-  axios.get(`${API}breweries/random`, {
+  axios.get<Beer[]>(`${API}breweries/random`, {
     params: { size },
   });
 

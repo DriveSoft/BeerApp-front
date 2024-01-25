@@ -17,6 +17,8 @@ interface Beer {
   website_url: string;
   state: string;
   street: string;
+
+  checked: boolean
 }
 
 export type { Beer };
