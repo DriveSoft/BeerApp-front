@@ -17,27 +17,27 @@ const Home = () => {
 	// eslint-disable-next-line
 	useEffect(fetchData.bind(this, setBeerList), []);
 	useEffect(() => {
-		localStorage.setItem("savedList", JSON.stringify(savedList))
+		localStorage.setItem("savedList", JSON.stringify(savedList));
 	}, [savedList]);
 
 	function getSavedListFromStorage() {
-		return JSON.parse(localStorage.getItem("savedList") ?? "[]") as Beer[]
+		return JSON.parse(localStorage.getItem("savedList") ?? "[]") as Beer[];
 	}
 
 	const filteredBeerList = beerList.filter(beer => beer.name.toLowerCase().includes(filterValue.toLowerCase()));
 	const sortedBeerList = sort === "ASC" ? filteredBeerList.sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0) : filteredBeerList.sort((a, b) => a.name > b.name ? -1 : a.name > b.name ? 1 : 0);
 	const countPage = Math.ceil(sortedBeerList.length / ITEMS_PER_PAGE);
 	const currentPage = page > countPage ? countPage : page;
-	const pagedBeerList = sortedBeerList.slice((currentPage-1) * ITEMS_PER_PAGE, (currentPage-1) * ITEMS_PER_PAGE + ITEMS_PER_PAGE)	
+	const pagedBeerList = sortedBeerList.slice((currentPage-1) * ITEMS_PER_PAGE, (currentPage-1) * ITEMS_PER_PAGE + ITEMS_PER_PAGE);	
 
 	const onCheckBeer = (checked: boolean, id: string) => {
 		const newBeerState = beerList.map(beer => (beer.id === id ? {...beer, checked: checked} : beer));
-		setBeerList(newBeerState)
+		setBeerList(newBeerState);
 	}
 
 	const onClickSaveSelectedItems = () => {
 		const selectedItems = beerList.filter(beer => beer.checked);
-		const selectedItemsWODuplication = selectedItems.filter(newBeer => !savedList.some(beer => beer.id === newBeer.id) )
+		const selectedItemsWODuplication = selectedItems.filter(newBeer => !savedList.some(beer => beer.id === newBeer.id) );
 		setSavedList([...savedList, ...selectedItemsWODuplication]);
 
 		const uncheckedBeerList = beerList.map(beer => ({...beer, checked: false}));
@@ -52,7 +52,7 @@ const Home = () => {
 						<div className={styles.listContainer}>
 							<div className={styles.listHeader}>
 								<div style={{display: "flex"}}>
-									<TextField autoComplete="one-time-code" label='Filter...' variant='outlined' onChange={(e: ChangeEvent<HTMLInputElement>) => setFilterValue(e.target.value) } />
+									<TextField onChange={(e: ChangeEvent<HTMLInputElement>) => setFilterValue(e.target.value) } autoComplete="one-time-code" label='Filter...' variant='outlined' />
 									<Button variant='contained' onClick={() => setSort(prev => prev === "ASC" ? "DESC" : "ASC")}>
 										Sort {sort === "ASC" ? "↓" : "↑"}
 									</Button>
@@ -71,7 +71,9 @@ const Home = () => {
 								))}
 							</ul>
 							<Pagination count={countPage} sx={{mb: 5}} page={currentPage} onChange={(_, page) => setPage(page)} />
-							<Button variant='contained' onClick={onClickSaveSelectedItems} disabled={!sortedBeerList.some(beer => beer.checked)}>Save selected items</Button>
+							<Button variant='contained' onClick={onClickSaveSelectedItems} disabled={!sortedBeerList.some(beer => beer.checked)}>
+								Save selected items
+							</Button>
 						</div>
 					</Paper>
 
@@ -84,8 +86,8 @@ const Home = () => {
 								</Button>
 							</div>
 							<ul className={styles.list}>
-								{savedList.map((beer, index) => (
-									<li key={index.toString()}>
+								{savedList.map((beer) => (
+									<li key={beer.id}>
 										<Checkbox />
 										<Link component={RouterLink} to={`/beer/${beer.id}`}>
 											{beer.name}

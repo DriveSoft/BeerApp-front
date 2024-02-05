@@ -15,8 +15,6 @@ const Beer = () => {
 	// eslint-disable-next-line
 	useEffect(fetchData.bind(this, setBeer, id), [id]);
 
-	console.log("imgWoodHouse", imgWoodHouse)
-
 	return (
 		<Grid container component="main" sx={{ height: '80vh' }}>
 			<Grid

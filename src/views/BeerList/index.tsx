@@ -33,8 +33,16 @@ const BeerList = () => {
 				</header>
 				<main>
 					<div style={{ display: "flex" }}>
-						<TextField autoComplete="one-time-code" label='Filter...' variant='outlined' onChange={(e: ChangeEvent<HTMLInputElement>) => setFilterValue(e.target.value)} />
-						<Button variant='contained' onClick={() => setSort(prev => prev === "ASC" ? "DESC" : "ASC")}>
+						<TextField 
+							onChange={(e: ChangeEvent<HTMLInputElement>) => setFilterValue(e.target.value)} 
+							autoComplete="one-time-code" 
+							label='Filter...' 
+							variant='outlined' 
+						/>
+						<Button 
+							variant='contained' 
+							onClick={() => setSort(prev => prev === "ASC" ? "DESC" : "ASC")}
+						>
 							Sort {sort === "ASC" ? "↓" : "↑"}
 						</Button>
 					</div>
