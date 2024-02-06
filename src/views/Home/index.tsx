@@ -61,8 +61,8 @@ const Home = () => {
 								<Button variant='contained' onClick={() => fetchData.bind(this, setBeerList)()}>Reload list</Button>
 							</div>
 							<ul className={styles.list}>
-								{pagedBeerList.map((beer, index) => (
-									<li key={index.toString()}>
+								{pagedBeerList.map((beer) => (
+									<li key={beer.id}>
 										<Checkbox checked={beer.checked} onChange={(_, checked) => onCheckBeer(checked, beer.id)} />
 										<Link component={RouterLink} to={`/beer/${beer.id}`}>
 											{beer.name}
